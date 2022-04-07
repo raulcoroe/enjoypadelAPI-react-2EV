@@ -12,4 +12,6 @@ public interface PlayerService {
     Player addPlayer(Player newPlayer);
     Player deletePlayer(long id) throws PlayerNotFoundException;
     Player modifyPlayer(long id, Player newPlayer) throws PlayerNotFoundException;
+
+    List<Player> findAll(boolean availability);
 }

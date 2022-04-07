@@ -52,4 +52,9 @@ public class PlayerServiceImpl implements PlayerService {
         newPlayer.setId(id);
         return playerRepository.save(newPlayer);
     }
+
+    @Override
+    public List<Player> findAll(boolean availability) {
+        return playerRepository.findAll(availability);
+    }
 }

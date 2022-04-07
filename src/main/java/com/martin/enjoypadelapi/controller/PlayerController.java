@@ -23,9 +23,14 @@ public class PlayerController {
     private PlayerService playerService;
 
     @GetMapping("/players")
-    public List<Player> findAll() {
+    public List<Player> findAll(@RequestParam(name = "availability", defaultValue = "0") boolean availability) {
         logger.info("Inicio getPlayers");
-        List<Player> players = playerService.findAll();
+        List<Player> players;
+        if (availability) {
+             players = playerService.findAll(availability);
+        } else {
+            players = playerService.findAll();
+        }
         logger.info("Final getPlayers");
         return players;
     }

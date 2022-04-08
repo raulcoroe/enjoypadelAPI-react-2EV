@@ -45,11 +45,10 @@ public class PlayerController {
     }
 
     @PostMapping("/players")
-    public Player addPlayer(@RequestBody Player newPlayer) {
+    public void addPlayer(@RequestBody Player newPlayer) {
         logger.info("Inicio addPlayer");
         Player player = playerService.addPlayer(newPlayer);
         logger.info("Final addPlayer");
-        return player;
     }
 
     @PutMapping("/player/{id}")

@@ -1,8 +1,11 @@
 package com.martin.enjoypadelapi.controller;
 
 import com.martin.enjoypadelapi.domain.Match;
+import com.martin.enjoypadelapi.domain.dto.MatchDTO;
+import com.martin.enjoypadelapi.exception.CenterNotFoundException;
 import com.martin.enjoypadelapi.exception.ErrorResponse;
 import com.martin.enjoypadelapi.exception.MatchNotFoundException;
+import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 import com.martin.enjoypadelapi.service.MatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +41,10 @@ public class MatchController {
     }
 
     @PostMapping("/matches")
-    public Match addMatch(@RequestBody Match match)  {
+    public void addMatch(@RequestBody MatchDTO matchDto) throws PlayerNotFoundException, CenterNotFoundException {
         logger.info("Inicio addMatch");
-        Match newMatch = matchService.addMatch(match);
+        matchService.addMatch(matchDto);
         logger.info("Final addMatch");
-        return newMatch;
     }
 
     @PutMapping("/match/{id}")
@@ -66,6 +68,20 @@ public class MatchController {
     public ResponseEntity<ErrorResponse> handleMatchNotFoundException(MatchNotFoundException mnfe) {
         ErrorResponse errorResponse = new ErrorResponse("404", mnfe.getMessage());
         logger.error(mnfe.getMessage(), mnfe);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlayerNotFoundException(PlayerNotFoundException pnfe) {
+        ErrorResponse errorResponse = new ErrorResponse("404", pnfe.getMessage());
+        logger.error(pnfe.getMessage(), pnfe);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CenterNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCenterNotFoundException(CenterNotFoundException cenfe) {
+        ErrorResponse errorResponse = new ErrorResponse("404", cenfe.getMessage());
+        logger.error(cenfe.getMessage(), cenfe);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

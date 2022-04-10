@@ -30,7 +30,7 @@ public class Match {
     @Column
     private String matchScore;
 
-    @ManyToMany(mappedBy = "matches")
+    @ManyToMany(mappedBy = "matches", cascade = CascadeType.ALL)
     private List<Player> players;
 
     @ManyToOne

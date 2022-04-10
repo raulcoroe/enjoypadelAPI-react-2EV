@@ -47,13 +47,15 @@ public class PlayerController {
     @PostMapping("/players")
     public void addPlayer(@RequestBody Player newPlayer) {
         logger.info("Inicio addPlayer");
-        Player player = playerService.addPlayer(newPlayer);
+        newPlayer.setImage(null);
+        playerService.addPlayer(newPlayer);
         logger.info("Final addPlayer");
     }
 
     @PutMapping("/player/{id}")
     public Player modifyPlayer(@PathVariable long id, @RequestBody Player newPlayer) throws PlayerNotFoundException {
         logger.info("Inicio modifyPlayer");
+        newPlayer.setImage(null);
         Player player = playerService.modifyPlayer(id, newPlayer);
         logger.info("Final modifyPlayer");
         return player;

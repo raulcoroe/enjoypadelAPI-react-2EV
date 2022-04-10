@@ -12,6 +12,6 @@ public interface MatchService {
     List<Match> findAll();
     Match findById(long id) throws MatchNotFoundException;
     void addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException;
-    Match deleteMatch(long id) throws MatchNotFoundException;
-    Match modifyMatch(long id, Match match) throws MatchNotFoundException;
+    void deleteMatch(long id) throws MatchNotFoundException;
+    Match modifyMatch(long id, MatchDTO matchDTO) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException;
 }

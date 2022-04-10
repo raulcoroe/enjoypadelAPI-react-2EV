@@ -47,19 +47,18 @@ public class MatchController {
     }
 
     @PutMapping("/match/{id}")
-    public Match modifyMatch(@PathVariable long id, @RequestBody Match match) throws MatchNotFoundException {
+    public Match modifyMatch(@PathVariable long id, @RequestBody MatchDTO matchDto) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException {
         logger.info("Inicio modifyMatch");
-        Match newMatch = matchService.modifyMatch(id, match);
+        Match newMatch = matchService.modifyMatch(id, matchDto);
         logger.info("Final modifyMatch");
         return newMatch;
     }
 
     @DeleteMapping("/match/{id}")
-    public Match deleteMatch(@PathVariable long id)throws MatchNotFoundException {
+    public void deleteMatch(@PathVariable long id)throws MatchNotFoundException {
         logger.info("Inicio deleteMatch");
-        Match match = matchService.deleteMatch(id);
+        matchService.deleteMatch(id);
         logger.info("Final deleteMatch");
-        return match;
     }
 
 

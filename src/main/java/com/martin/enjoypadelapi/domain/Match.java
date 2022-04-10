@@ -1,33 +1,30 @@
 package com.martin.enjoypadelapi.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "matches")
+@Document(value = "matches")
 public class Match {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column
+    private String id;
+    @Field
     private String round;
-    @Column
+    @Field
     private int duration;
-    @Column
+    @Field
     private String date;
-    @Column
+    @Field
     private String matchScore;
 
     @ManyToMany(mappedBy = "matches", cascade = CascadeType.ALL)

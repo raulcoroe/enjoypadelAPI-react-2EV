@@ -2,13 +2,13 @@ package com.martin.enjoypadelapi.service;
 
 import com.martin.enjoypadelapi.domain.Center;
 import com.martin.enjoypadelapi.exception.CenterNotFoundException;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface CenterService {
-    List<Center> findAll();
-    Center findById(long id) throws CenterNotFoundException;
-    void addCenter(Center center);
-    Center deleteCenter(long id) throws CenterNotFoundException;
-    Center modifyCenter(long id, Center newCenter) throws CenterNotFoundException;
+    Flux<Center> findAll();
+    Mono<Center> findById(long id) throws CenterNotFoundException;
+    Mono<Center> addCenter(Center center);
+    void deleteCenter(long id) throws CenterNotFoundException;
+    Mono<Center> modifyCenter(long id, Center newCenter) throws CenterNotFoundException;
 }

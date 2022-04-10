@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,18 +13,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "centers")
+@Document(value = "centers")
 public class Center {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column
+    private String id;
+    @Field
     private String name;
-    @Column
+    @Field
     private String longitude;
-    @Column
+    @Field
     private String latitude;
-
 
     @JsonBackReference
     @OneToMany(mappedBy = "center")

@@ -1,5 +1,6 @@
 package com.martin.enjoypadelapi.controller;
 
+import com.martin.enjoypadelapi.domain.Center;
 import com.martin.enjoypadelapi.domain.Match;
 import com.martin.enjoypadelapi.domain.dto.MatchDTO;
 import com.martin.enjoypadelapi.exception.CenterNotFoundException;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 @RestController
@@ -24,17 +27,17 @@ public class MatchController {
     private MatchService matchService;
 
     @GetMapping("/matches")
-    public List<Match> findAll() {
+    public Flux<Match> findAll() {
         logger.info("Inicio findAll(matches)");
-        List<Match> matches = matchService.findAll();
+        Flux<Match> matches = matchService.findAll();
         logger.info("Final findAll(matches)");
         return matches;
     }
 
     @GetMapping("/match/{id}")
-    public Match findById(@PathVariable long id) throws MatchNotFoundException {
+    public Mono<Match> findById(@PathVariable long id) throws MatchNotFoundException {
         logger.info("Inicio findById(match(");
-        Match match = matchService.findById(id);
+        Mono<Match> match = matchService.findById(id);
         logger.info("Final findById(match)");
         return match;
     }
@@ -47,9 +50,9 @@ public class MatchController {
     }
 
     @PutMapping("/match/{id}")
-    public Match modifyMatch(@PathVariable long id, @RequestBody MatchDTO matchDto) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException {
+    public Mono<Match> modifyMatch(@PathVariable long id, @RequestBody MatchDTO matchDto) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException {
         logger.info("Inicio modifyMatch");
-        Match newMatch = matchService.modifyMatch(id, matchDto);
+        Mono<Match> newMatch = matchService.modifyMatch(id, matchDto);
         logger.info("Final modifyMatch");
         return newMatch;
     }

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,21 +15,19 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Entity(name = "players")
+@Document(value = "players")
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column
+    private String id;
+    @Field
     private String name;
-    @Column
+    @Field
     private String surname;
-    @Column
+    @Field
     private String level;
-    @Column
+    @Field
     private boolean availability;
-    @Column
+    @Field
     private byte[] image;
 
     @JoinTable(

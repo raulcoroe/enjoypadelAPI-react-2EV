@@ -5,8 +5,10 @@ import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 import com.martin.enjoypadelapi.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -15,16 +17,14 @@ public class PlayerServiceImpl implements PlayerService {
     PlayerRepository playerRepository;
 
     @Override
-    public List<Player> findAll() {
-        List<Player> players = playerRepository.findAll();
-        return players;
+    public Flux<Player> findAll() {
+        return playerRepository.findAll();
     }
 
     @Override
-    public Player findById(long id) throws PlayerNotFoundException {
-        Player player = playerRepository.findById(id)
-                .orElseThrow(PlayerNotFoundException::new);
-        return player;
+    public Mono<Player> findById(long id) throws PlayerNotFoundException {
+        return playerRepository.findById(id)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new PlayerNotFoundException())));
     }
 
     @Override
@@ -33,23 +33,17 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player deletePlayer(long id) throws PlayerNotFoundException {
-        Player player = playerRepository.findById(id)
-                .orElseThrow(PlayerNotFoundException::new);
-        playerRepository.delete(player);
-        return player;
+    public void deletePlayer(long id) throws PlayerNotFoundException {
+        Mono<Player> player = playerRepository.findById(id)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new PlayerNotFoundException())));
+        playerRepository.delete(Objects.requireNonNull(player.block()));
     }
 
     @Override
-    public Player modifyPlayer(long id, Player newPlayer) throws PlayerNotFoundException {
-        playerRepository.findById(id)
-                .orElseThrow(PlayerNotFoundException::new);
-        newPlayer.setId(id);
+    public Mono<Player> modifyPlayer(long id, Player newPlayer) throws PlayerNotFoundException {
+        Mono<Player> playerMono = playerRepository.findById(id)
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new PlayerNotFoundException())));
+        newPlayer.setId(Objects.requireNonNull(playerMono.block()).getId());
         return playerRepository.save(newPlayer);
-    }
-
-    @Override
-    public List<Player> findAll(boolean availability) {
-        return playerRepository.findAll(availability);
     }
 }

@@ -1,5 +1,6 @@
 package com.martin.enjoypadelapi.controller;
 
+import com.martin.enjoypadelapi.domain.Match;
 import com.martin.enjoypadelapi.domain.Player;
 import com.martin.enjoypadelapi.exception.ErrorResponse;
 import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -23,11 +26,12 @@ public class PlayerController {
     private PlayerService playerService;
 
     @GetMapping("/players")
-    public List<Player> findAll(@RequestParam(name = "availability", defaultValue = "0") boolean availability) {
+    public Flux<Player> findAll(@RequestParam(name = "availability", defaultValue = "0") boolean availability) {
         logger.info("Inicio getPlayers");
-        List<Player> players;
+        Flux<Player> players;
         if (availability) {
-             players = playerService.findAll(availability);
+             players = (Flux<Player>) playerService.findAll().toStream().filter(player -> player.isAvailability());
+
         } else {
             players = playerService.findAll();
         }
@@ -37,9 +41,9 @@ public class PlayerController {
 
 
     @GetMapping("/player/{id}")
-    public Player findById(@PathVariable long id) throws PlayerNotFoundException {
+    public Mono<Player> findById(@PathVariable long id) throws PlayerNotFoundException {
         logger.info("Inicio findById");
-        Player player = playerService.findById(id);
+        Mono<Player> player = playerService.findById(id);
         logger.info("Final findById");
         return player;
     }
@@ -47,26 +51,23 @@ public class PlayerController {
     @PostMapping("/players")
     public void addPlayer(@RequestBody Player newPlayer) {
         logger.info("Inicio addPlayer");
-        newPlayer.setImage(null);
         playerService.addPlayer(newPlayer);
         logger.info("Final addPlayer");
     }
 
     @PutMapping("/player/{id}")
-    public Player modifyPlayer(@PathVariable long id, @RequestBody Player newPlayer) throws PlayerNotFoundException {
+    public Mono<Player> modifyPlayer(@PathVariable long id, @RequestBody Player newPlayer) throws PlayerNotFoundException {
         logger.info("Inicio modifyPlayer");
-        newPlayer.setImage(null);
-        Player player = playerService.modifyPlayer(id, newPlayer);
+        Mono<Player> player = playerService.modifyPlayer(id, newPlayer);
         logger.info("Final modifyPlayer");
         return player;
     }
 
     @DeleteMapping("/player/{id}")
-    public Player deletePlayer(@PathVariable long id) throws PlayerNotFoundException {
+    public void deletePlayer(@PathVariable long id) throws PlayerNotFoundException {
         logger.info("Inicio deletePlayer");
-        Player player = playerService.deletePlayer(id);
+        playerService.deletePlayer(id);
         logger.info("Final deletePlayer");
-        return player;
     }
 
 

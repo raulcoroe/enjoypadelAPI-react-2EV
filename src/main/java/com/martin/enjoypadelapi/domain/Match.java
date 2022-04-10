@@ -1,43 +1,37 @@
 package com.martin.enjoypadelapi.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "matches")
+@AllArgsConstructor
+@Document(value = "matches")
 public class Match {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(name = "start_time")
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime startTime;
-    @Column(name = "end_time")
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime endTime;
-    @Column
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date;
-    @Column(name = "match_score")
+    private String id;
+    @Field
+    private String round;
+    @Field
+    private int duration;
+    @Field
+    private String date;
+    @Field
     private String matchScore;
 
-    @ManyToMany(mappedBy = "matches")
-    private List<Team> teams;
+    @ManyToMany(mappedBy = "matches", cascade = CascadeType.ALL)
+    private List<Player> players;
 
     @ManyToOne
-    @JoinColumn(name = "court_id")
-    private Court court;
-
+    @JoinColumn(name = "center_id")
+    private Center center;
 }
 

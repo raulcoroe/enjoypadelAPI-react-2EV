@@ -1,17 +1,15 @@
 package com.martin.enjoypadelapi.repository;
 
 import com.martin.enjoypadelapi.domain.Center;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
 @Repository
-public interface CenterRepository extends CrudRepository<Center, Long> {
-    List<Center> findAll();
-
-    @Query(value = "select * from \"center\" where (\"capacity\" >= :capacity AND \"changing_rooms\" = :changingRooms AND \"subscription_price\" < :subscriptionPrice)", nativeQuery = true)
-    List<Center> findFilteredCenters(int capacity, boolean changingRooms, float subscriptionPrice);
-
+public interface CenterRepository extends ReactiveMongoRepository<Center, Long> {
+    Flux<Center> findAll();
 }

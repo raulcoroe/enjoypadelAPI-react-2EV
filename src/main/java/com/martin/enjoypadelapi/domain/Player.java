@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,29 +15,27 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Entity(name = "players")
+@Document(value = "players")
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column
+    private String id;
+    @Field
     private String name;
-    @Column
+    @Field
     private String surname;
-    @Column(name = "player_score")
-    private long playerScore;
-    @Column(name = "birth_date")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate birthDate;
+    @Field
+    private String level;
+    @Field
+    private boolean availability;
+    @Field
+    private byte[] image;
 
     @JoinTable(
-            name = "rel_players_teams",
-            joinColumns = @JoinColumn(name = "players_id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id")
+            name = "rel_players_matches",
+            joinColumns = @JoinColumn(name = "player_id"),
+            inverseJoinColumns = @JoinColumn(name = "match_id")
     )
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JsonBackReference(value = "player_teams")
-    private List<Team> teams;
-
+    @ManyToMany
+    @JsonBackReference(value = "player_matches")
+    private List<Match> matches;
 }

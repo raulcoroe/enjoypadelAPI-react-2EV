@@ -1,22 +1,19 @@
 package com.martin.enjoypadelapi.service;
 
 import com.martin.enjoypadelapi.domain.Match;
-import com.martin.enjoypadelapi.domain.Team;
 import com.martin.enjoypadelapi.domain.dto.MatchDTO;
-import com.martin.enjoypadelapi.exception.CourtNotFoundException;
+import com.martin.enjoypadelapi.exception.CenterNotFoundException;
 import com.martin.enjoypadelapi.exception.MatchNotFoundException;
+import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 
 public interface MatchService {
-    List<Match> findAll();
-    Match findById(long id) throws MatchNotFoundException;
-    Match addMatch(MatchDTO matchDto) throws CourtNotFoundException;
-    Match deleteMatch(long id) throws MatchNotFoundException;
-    Match modifyMatch(long id, MatchDTO matchDto) throws MatchNotFoundException, CourtNotFoundException;
-
-    Match partialMatchModification(long id, Map<Object, Object> fields) throws MatchNotFoundException;
-
-    List<Team> listMatchTeams(long id) throws MatchNotFoundException;
+    Flux<Match> findAll();
+    Mono<Match> findById(long id) throws MatchNotFoundException;
+    void addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException;
+    void deleteMatch(long id) throws MatchNotFoundException;
+    Mono<Match> modifyMatch(long id, MatchDTO matchDTO) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException;
 }
